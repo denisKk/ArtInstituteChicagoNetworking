@@ -17,19 +17,11 @@ open class ArtworksAPI {
      
      - parameter page: (query) Number of page 
      - parameter limit: (query) Limit of artworks by page 
-     - parameter apiResponseQueue: The queue on which api response is dispatched.
-     - parameter completion: completion handler to receive the data and the error objects
+     - returns: ArtworksList
      */
-    @discardableResult
-    open class func everythingGet(page: String, limit: String, apiResponseQueue: DispatchQueue = OpenAPIClientAPI.apiResponseQueue, completion: @escaping ((_ data: ArtworksList?, _ error: Error?) -> Void)) -> RequestTask {
-        return everythingGetWithRequestBuilder(page: page, limit: limit).execute(apiResponseQueue) { result in
-            switch result {
-            case let .success(response):
-                completion(response.body, nil)
-            case let .failure(error):
-                completion(nil, error)
-            }
-        }
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    open class func everythingGet(page: String, limit: String) async throws -> ArtworksList {
+        return try await everythingGetWithRequestBuilder(page: page, limit: limit).execute().body
     }
 
     /**
